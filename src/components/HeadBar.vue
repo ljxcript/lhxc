@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id = 'head-bar'>
         <x-header :right-options="{showMore: showMore}" @on-click-more="emit" >{{this.title}}</x-header>
 	</div>
 </template>
@@ -36,4 +36,17 @@ export default {
 
 
 
-<style></style>
+<style>
+  #head-bar .vux-header{
+    background : #00B1DD;
+  }
+  #head-bar .vux-header .vux-header-left,
+  #head-bar .vux-header .vux-header-right .vux-header-more,
+  #head-bar .vux-header .vux-header-title,
+  #head-bar .vux-header .vux-header-back{
+    color: #000000;
+  }
+  #head-bar .vux-header .vux-header-left .left-arrow::before{
+    border-color: #000000;
+  }
+</style>
