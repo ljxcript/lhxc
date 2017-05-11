@@ -15,6 +15,8 @@
 
 <script type="text/ecmascript-6">
   import {Group, Datetime, XButton, XInput, Search} from 'vux'
+  import _ from 'underscore'
+  
   export default {
     components: {
       Group,
@@ -30,9 +32,18 @@
       }
     },
     methods: {
+      queryIdOrigin () {
+        this.$http.get('http://localhost:8080').then(
+          data => console.log(data)
+        )
+        console.log('sending query')
+      },
       success () {
         alert('查到结果了！')
       }
+    },
+    mounted: function () {
+      this.queryId = _.debounce(this.queryIdOrigin, 1000, true)
     }
   }
 </script>
