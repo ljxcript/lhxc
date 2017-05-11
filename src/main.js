@@ -6,6 +6,9 @@ import FastClick from 'fastclick'
 import App from './App'
 import router from './router/index'
 import Bus from './components/Bus'
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource)
 
 router.beforeEach((to, from, next) => {
   Bus.$emit('page-switch', to.name)
