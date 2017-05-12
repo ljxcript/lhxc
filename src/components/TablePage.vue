@@ -211,7 +211,7 @@ export default {
 
 .pRanger-Container > div {
   border: 0.5px solid lightgray;
-  padding: 5px 2px;
+  padding: 2px 2px;
   border-collapse: collapse;
   flex-grow: 1;
   text-align: center;
@@ -220,10 +220,10 @@ export default {
 .pRanger-Container .acIndex {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
-  padding: 5px 10px; 
+  padding: 2px 10px; 
 }
 
 .pRanger-Container .normIndex{
-  padding: 5px 10px;
+  padding: 2px 10px;
 }
 </style>
