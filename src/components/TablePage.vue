@@ -1,10 +1,7 @@
 <template>
   <div>
     <confirm v-model="showCusTH" title="选择希望显示的表头" 
-    @on-cancel="onCancel"
     @on-confirm="onConfirm"
-    @on-show="onShow"
-    @on-hide="onHide"
     >
       <checklist label-position="left" :options="titles" v-model="columnToShow"></checklist>
     </confirm>  
@@ -16,11 +13,18 @@
         </tr>
       </thead>
       <tbody>        
-        <tr v-for="r in tData">
+        <tr v-for="r in tDataThisPage">
         <td v-for="c in columnToShowIndex">{{r[c]}}</td>
         </tr>
       </tbody>        
       </x-table>
+    </div>
+    <div class = "pRanger-Container">
+      <div class = "first" @click="firstPage">首页</div>
+      <div class = "pre" @click="prePage">上一页</div>
+      <div v-for = "i in indexRange" :class = "pageIndex === i ? 'acIndex' : 'normIndex'" @click="toPage(i)">{{i+1}}</div>
+      <div class = "next" @click="nextPage">下一页</div>
+      <div class = "last" @click="lastPage">尾页</div>
     </div>
     <div v-transfer-dom>
       <actionsheet @on-click-menu="menuMoreClick" :menus="menus" v-model="showMenus" show-cancel ></actionsheet>
@@ -31,7 +35,7 @@
 <script>
 import { Checklist, Confirm, XTable, Actionsheet, TransferDom } from 'vux'
 import Bus from './Bus'
-
+import FakeData from '../assets/FakeData'
 export default {
   directives: {
     TransferDom
@@ -45,210 +49,24 @@ export default {
 
   data () {
     return {
+      pageIndex: 0,
+      pageN: 0,
+      rowNperPage: 1,
+      indexRange: [],
       menus: {
         menu1: '自定义表头',
         menu2: '条件查询'
       },
       showMenus: false,
       showCusTH: false,
-      columnToShow: [
-      ],
-      columnToShowIndex: [
-      ],
-      titles: [
-        '月份',
-        '客户经理BOSS工号',
-        '归属分公司',
-        '客户经理群体',
-        '团队名称',
-        '是否团队队长',
-        '客户经理姓名',
-        '集团客户新增扣减奖金',
-        '集团彩铃扣减奖金'
-      ],
-      tData: [
-        [
-          '201703',
-          'AGZHSK000120',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '文素群',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZHSK000013',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '陈欣燕',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0030012',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '刘转芬',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0010163',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '郭松生',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0010244',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '郭健',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZHSK000120',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '文素群',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZHSK000013',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '陈欣燕',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0030012',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '刘转芬',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0010163',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '郭松生',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0010244',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '郭健',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZHSK000120',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '文素群',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZHSK000013',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '陈欣燕',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0030012',
-          '花都分公司',
-          '普通集团客户经理',
-          '花都分公司政企客户花都东网格团队',
-          '是',
-          '刘转芬',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0010163',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '郭松生',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZPA0010244',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '郭健',
-          '1900.5',
-          '1900.5'
-        ],
-        [
-          '201703',
-          'AGZGTZE00119',
-          '番禺分公司',
-          '普通集团客户经理',
-          '番禺分公司南沙客户部大岗网格团队',
-          '是',
-          '陈锡东',
-          '1900.5',
-          '1900.5'
-        ]
-      ]
+      columnToShow: [],
+      columnToShowIndex: [],
+      titles: FakeData.titles,
+      tDataThisPage: [],
+      tData: FakeData.data
     }
   },
   methods: {
-    onCancel: function () {
-    },
     onConfirm: function () {
       this.columnToShowIndex = []
       for (let i = 0; i < this.columnToShow.length; i++) {
@@ -256,10 +74,6 @@ export default {
       }
       this.columnToShowIndex.sort()
     },
-    onHide: function () {
-    },
-    onShow: function () {
-    }, // 四个回调函数用于自定义表头的confirm输入框
     menuMoreClick: function (key) {
       if (key === 'menu1') {
         this.showCusTH = true
@@ -267,16 +81,79 @@ export default {
       if (key === 'menu2') {
         this.$router.push('/queryPage')
       }
-    }// more菜单的点击回调
+    }, // more菜单的点击回调
+    updatePage: function () {
+      this.updateTable() // 更新table中应该呈现的数据
+      this.updateIndexBelow() // 更新下方的分页栏
+    },
+    updateTable: function () {
+      this.tDataThisPage = this.tData.slice(this.pageIndex * this.rowNperPage, (this.pageIndex + 1) * this.rowNperPage)
+    },
+    updateIndexBelow: function () {
+      this.indexRange.length = 0
+      // 清空“页面范围”数组
+      // 移动端屏幕空间有限，选取前后共5个页面下标比较合适
+      if (this.pageN <= 5) {
+        for (let i = 0; i < this.pageN; i++) {
+          this.indexRange.push(i)
+        }// 如果页数小于等于5，则下标数组固定为[1, 5]
+      } else {
+      // 如果页数大于5，则下标数组需要在[pageIndex-2, pageIndex+2]间动态变化
+        if (this.pageIndex >= 2) {
+          for (let i = -2; i < 3; i++) {
+            if (this.pageIndex + i < this.pageN) {
+              this.indexRange.push(this.pageIndex + i)
+            } // 避免超出pageN的数出现
+          }
+          if (this.pageIndex === this.pageN - 1) {
+            this.indexRange.unshift(this.pageIndex - 3)
+            this.indexRange.unshift(this.pageIndex - 4)
+          }
+          if (this.pageIndex === this.pageN - 2) {
+            this.indexRange.unshift(this.pageIndex - 3)
+          } // 上面两个if语句是为了补全5个下标
+        } else {
+          for (let i = 0; i < 5; i++) {
+            this.indexRange.push(i)
+          }
+        }
+      }
+    },
+    nextPage: function () {
+      if (this.pageIndex !== this.pageN - 1) {
+        this.toPage(this.pageIndex + 1)
+      }
+    },
+    prePage: function () {
+      if (this.pageIndex !== 0) {
+        this.toPage(this.pageIndex - 1)
+      }
+    },
+    firstPage: function () {
+      this.toPage(0)
+    },
+    lastPage: function () {
+      this.toPage(this.pageN - 1)
+    },
+    toPage: function (i) {
+      this.pageIndex = i
+      this.updatePage()
+    }
   },
-  mounted: function () {
+  beforeMount: function () {
+    let rowN = this.tData.length
+    this.pageN = Math.ceil(rowN / this.rowNperPage)
     let length = this.titles.length
     for (let i = 0; i < length; i++) {
       this.columnToShowIndex[i] = i
-    }// 初始化需要展示的表头为all
+    }
+    // 初始化数据
     Bus.$on('menu-more-click', () => {
       this.showMenus = true
-    })// 注册监听HeaderBar组件发出的more菜单的点击事件
+    })
+    // 初始化事件监听
+    this.updatePage()
+    // 初始化视图
   }
 }
 </script>
@@ -285,7 +162,7 @@ export default {
 <style scoped>
 #table-wrapper {
   overflow: scroll;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
 }
 
 #table-wrapper table{
@@ -306,6 +183,22 @@ export default {
 
 #table-wrapper table th {
   border-left: 1px solid white;
+}
+
+.pRanger-Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.pRanger-Container > div {
+  border: 1px solid gray;
+  padding: 0px 4px;
+}
+
+.pRanger-Container .acIndex {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
 }
 
 </style>
