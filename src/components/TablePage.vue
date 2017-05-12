@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id = "table-page">
     <confirm v-model="showCusTH" title="选择希望显示的表头" 
     @on-confirm="onConfirm"
     >
@@ -56,8 +56,8 @@ export default {
     return {
       pageIndex: 0,
       pageN: 0,
-      rowNperPage: 4,
-      rowNperPageChoices: [1, 2, 3, 4, 5, 6, 7],
+      rowNperPage: 10,
+      rowNperPageChoices: [4, 8, 10],
       indexRange: [],
       menus: {
         menu1: '自定义表头',
@@ -173,9 +173,14 @@ export default {
 
 
 <style scoped>
+#table-page {
+  height: 80%;
+}
+
 #table-wrapper {
   overflow: scroll;
   margin-bottom: 10px;
+  height: 75%;
 }
 
 #table-wrapper table{
@@ -205,13 +210,20 @@ export default {
 }
 
 .pRanger-Container > div {
-  border: 1px solid gray;
-  padding: 0px 4px;
+  border: 0.5px solid lightgray;
+  padding: 5px 2px;
+  border-collapse: collapse;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .pRanger-Container .acIndex {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
+  padding: 5px 10px; 
 }
 
+.pRanger-Container .normIndex{
+  padding: 5px 10px;
+}
 </style>
