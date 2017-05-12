@@ -26,6 +26,9 @@
       <div class = "next" @click="nextPage">下一页</div>
       <div class = "last" @click="lastPage">尾页</div>
     </div>
+    <group title="选择每页行数">
+      <selector  :options="rowNperPageChoices" v-model="rowNperPage" @on-change="updatePageN"></selector>
+    </group>
     <div v-transfer-dom>
       <actionsheet @on-click-menu="menuMoreClick" :menus="menus" v-model="showMenus" show-cancel ></actionsheet>
     </div>    
@@ -33,7 +36,7 @@
 </template>
 
 <script>
-import { Checklist, Confirm, XTable, Actionsheet, TransferDom } from 'vux'
+import { Group, Checklist, Confirm, XTable, Actionsheet, TransferDom, Selector } from 'vux'
 import Bus from './Bus'
 import FakeData from '../assets/FakeData'
 export default {
@@ -41,17 +44,20 @@ export default {
     TransferDom
   },
   components: {
+    Group,
     XTable,
     Confirm,
     Checklist,
-    Actionsheet
+    Actionsheet,
+    Selector
   },
 
   data () {
     return {
       pageIndex: 0,
       pageN: 0,
-      rowNperPage: 1,
+      rowNperPage: 4,
+      rowNperPageChoices: [1, 2, 3, 4, 5, 6, 7],
       indexRange: [],
       menus: {
         menu1: '自定义表头',
@@ -137,6 +143,10 @@ export default {
     },
     toPage: function (i) {
       this.pageIndex = i
+      this.updatePage()
+    },
+    updatePageN: function () {
+      this.pageN = Math.ceil(this.tData.length / this.rowNperPage)
       this.updatePage()
     }
   },
