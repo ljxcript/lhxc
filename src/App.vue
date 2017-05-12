@@ -24,4 +24,12 @@ export default {
 body {
   background-color: #fbf9fe;
 }
+
+html, body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
 </style>
