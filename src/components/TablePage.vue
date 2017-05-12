@@ -147,7 +147,7 @@ export default {
     },
     updatePageN: function () {
       this.pageN = Math.ceil(this.tData.length / this.rowNperPage)
-      if (this.pageIndex > this.pageN) {
+      if (this.pageIndex >= this.pageN) {
         this.pageIndex = this.pageN - 1
       }
       this.updatePage()
