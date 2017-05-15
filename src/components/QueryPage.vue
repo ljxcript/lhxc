@@ -16,7 +16,7 @@
 <script type="text/ecmascript-6">
   import {Group, Datetime, XButton, XInput, Search} from 'vux'
   import _ from 'underscore'
-  
+
   export default {
     components: {
       Group,
